@@ -11,15 +11,16 @@ module.exports = {
     autoUpdateddAt: false,
 
     attributes: {
-        sensor: {
-            model: 'sensor',
+        sensor_id: {
+            type: 'string',
             required: true
         },
-        date: {
-            type: 'date',
-            required: true
-        },
-        time: 'time',
+        year: 'integer',
+        month: 'integer',
+        day: 'integer',
+        hour: 'integer',
+        minute: 'integer',
+        second: 'integer',
         value: {
             type: 'integer',
             required: true
