@@ -7,15 +7,19 @@ define(['d3', 'd3.chart'], function(d3) {
                 .x(function(d,i) { return x(i); })
                 .y(function(d,i) { return y(d); });
 
-            this.linePath = this.base.append("path").attr("class", "line");
+            var yAxis = this.yAxis = d3.svg.axis()
+                .scale(y)
+                .orient('left');
+
+            this.yLayer = this.base.append('g')
+                .attr('class', 'y axis');
+
+            this.linePath = this.base.append("path")
+                .attr("class", "line");
+
             this.layer("line", this.linePath, {
                 dataBind: function(data) {
-                    var chart = this.chart();
-                    // X scale will fit all values from data[] within pixels 0-w
-                    //chart.x = d3.scale.linear().domain([0, data.length]).range([0, chart.width()]);
-                    // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-                    //chart.y = d3.scale.linear().domain([0, _.max(data)]).range([chart.height(), 0]);
-                    return this.data([data]).attr("d", chart.line);
+                    return this.data([data]).attr("d", this.chart().line);
                 },
                 insert: function() {
                     return this.chart().linePath;
@@ -34,7 +38,7 @@ define(['d3', 'd3.chart'], function(d3) {
             this.w = width;
             width -= this.m[3] + this.m[1]
             this.x.range([0, width]);
-            this.base.attr("width", this.w);
+            this.base.attr("width", width);
             this.redraw();
             return this;
         },
@@ -56,6 +60,7 @@ define(['d3', 'd3.chart'], function(d3) {
             this._data = data;
             this.y.domain([0, _.max(data)]);
             this.x.domain([0, data.length]);
+            this.yLayer.call(this.yAxis);
             return data;
         },
 

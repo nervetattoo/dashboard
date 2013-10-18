@@ -1,4 +1,4 @@
-define(['backbone', 'lodash', 'bar-chart'], function(Backbone, _, d3) {
+define(['backbone', 'lodash', 'd3', 'LineChart'], function(Backbone, _, d3) {
     return Backbone.View.extend({
         tagName: 'div',
         className: 'pure-u-1-3',
@@ -12,13 +12,16 @@ define(['backbone', 'lodash', 'bar-chart'], function(Backbone, _, d3) {
 
         render: function() {
             var data = this.model.toJSON();
-            this.$el.html('<h1>' + data.name + '</h1><ul></ul>');
+            this.$el.html('<h1>' + data.name + '</h1>');
             if (data.values) {
-                this.$el.append('<div class="graph"></div>');
+                var graphNode = Backbone.$('<div class="graph"></div>').appendTo(this.$el);
                 var values = _.pluck(data.values, 'value');
-                var chart = d3.select('div.graph')
+                var chart = d3.select(graphNode[0])
                     .append("svg")
-                    .chart("LineChart");
+                    .append('g')
+                    .chart("LineChart")
+                    .width(600)
+                    .height(400);
 
                 chart.draw(values);
             };
